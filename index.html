@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-family: Tilt Neon;
+        }
+
+        .flex {
+            display: flex;
+            padding-top: 10%;
+            height: 100vh;
+        }
+
+        .input {
+            width: 63%;
+            border: 10px solid #a6a6a6;
+            height: 70%;
+            margin: 1rem;
+            padding: 10px;
+        }
+
+        .output {
+            width: 40%;
+            border: 10px solid #8c8c8c;
+            overflow-y: scroll;
+            height: 70%;
+            margin: 1rem;
+            position: relative;
+        }
+
+        .heading {
+            text-align: center;
+        }
+
+        .product {
+            display: flex;
+            background-color: #a6a6a6;
+            padding: 5px;
+            margin: 10px;
+            justify-content: space-between;
+            align-items: center;
+            font-size: larger;
+            color: white;
+            height: 4rem;
+        }
+
+        .btn {
+            display: flex;
+            justify-content: space-around;
+            border: 2px black solid;
+            border-radius: 30px;
+            background-color: #3b93a9;
+            width: 8rem;
+            margin-right: 10px;
+        }
+
+        .yesO {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .total {
+            position: absolute;
+            top: 250px;
+            background-color: #8c8c8c;
+            width: 96%;
+            font-size: x-large;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="flex">
+        <div class="input">
+            <div class="heading">
+                <h1>Products</h1>
+            </div>
+            <div class="no"></div>
+        </div>
+        <div class="output">
+            <div class="heading">
+                <h1>Cart</h1>
+            </div>
+            <div class="yesO">
+                <div class="yes1"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const Products = [
+            { id: 1, name: "Product- 1", price: 100, c: 0 },
+            { id: 2, name: "Product - 2", price: 200, c: 0 },
+            { id: 3, name: "Product - 3", price: 300, c: 0 },
+        ];
+
+        function display() {
+            const input = document.querySelector(".no");
+            input.innerHTML = "";
+
+            Products.forEach((ele, idx) => {
+
+                const div = document.createElement("div");
+                const name = document.createElement("p");
+                const price = document.createElement("p");
+                const btn = document.createElement("div");
+                const span1 = document.createElement("span");
+                const span2 = document.createElement("span");
+                const span3 = document.createElement("span");
+
+                name.innerText = ele["name"];
+                price.innerText = ele["price"];
+                span1.innerText = "+";
+                span3.innerText = "-";
+                span2.innerText = ele["c"];
+                span1.style.cursor = "pointer";
+                span3.style.cursor = "pointer";
+                span1.style.userSelect="none";
+                span3.style.userSelect="none";
+
+                span1.addEventListener("click", () => increment(idx));
+                span3.addEventListener("click", () => decrement(idx));
+
+                btn.append(span1, span2, span3);
+                div.append(name, price, btn);
+                btn.classList.add("btn");
+                div.classList.add("product");
+                input.append(div);
+
+            });
+
+        } display();
+        update();
+        function decrement(index) {
+            if (Products[index]["c"] > 0)
+                Products[index]["c"]--;
+            update();
+        }
+        function increment(index) {
+            Products[index]["c"]++;
+            update();
+        }
+
+
+
+
+        function update() {
+            let value = 0;
+            const output = document.querySelector(".yes1");
+            const outputO = document.querySelector(".yesO");
+            output.innerHTML = "";
+            output.style.cssText = "";
+
+            Products.forEach((ele, idx) => {
+                if (ele["c"] > 0) {
+                    const div = document.createElement("div");
+                    const name = document.createElement("p");
+                    const proc = document.createElement("div");
+                    const span1 = document.createElement("span");
+                    const span2 = document.createElement("span");
+                    const span3 = document.createElement("span");
+
+                    name.innerText = ele["name"];
+                    span1.innerText = ele["c"];
+                    span3.innerText = ele["price"];
+                    span2.innerHTML = "&times;";
+
+                    proc.append(span1, span2, span3);
+                    div.append(name, proc);
+                    proc.style.marginRight = "10px";
+                    div.classList.add("product");
+                    output.append(div);
+                    value += ele["price"] * ele["c"];
+                }
+
+
+            });
+
+            display();
+
+            if (value > 0) {
+                const res = document.createElement("div");
+                const span1 = document.createElement("span");
+                const span2 = document.createElement("span");
+                span1.innerText = "Total:"
+                span2.innerText = value;
+                res.append(span1, span2);
+                res.classList.add("product", "total");
+                output.append(res);
+            }
+            if (output.innerText === "") {
+                output.innerHTML = "<h1>No Product added to the cart</h1>"
+                output.style.cssText = "text-align:center;margin-top:10vh;";
+            }
+
+        }
+
+
+
+    </script>
+</body>
+
+</html>
